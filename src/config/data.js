@@ -3,9 +3,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { pool } = pkg;
+const { Pool } = pkg;
+console.log(process.env.DB_USER);
 
-const pool = new pool({
+const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,

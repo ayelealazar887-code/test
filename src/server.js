@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
+import pool from "./config/data.js";
+import UserRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 
@@ -10,9 +11,18 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json()); 
+app.use("/api", UserRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
+
+app.get("/", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT current_database();");
+
+    res.send(`Connected to database: ${result.rows[0].current_database}`);
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+    res.status(500).send("Error connecting to the database");
+  }
 });
 
 app.listen(PORT, () => {
